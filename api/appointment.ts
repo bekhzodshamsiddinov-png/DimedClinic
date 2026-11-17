@@ -1,6 +1,10 @@
 const clean = (v: unknown, max = 200) => (typeof v === "string" ? v.replace(/[<>]/g, "").trim().slice(0, max) : "");
 
 export default async function handler(req: any, res: any) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  if (req.method === "OPTIONS") return res.status(204).end();
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
   const b = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
   if (b.website) return res.status(200).json({ ok: true }); // honeypot
