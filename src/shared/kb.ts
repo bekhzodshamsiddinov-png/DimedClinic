@@ -127,17 +127,21 @@ export function localAnswer(question: string, lang: Lang): string {
       ? "Спасибо! Ваш номер получен — оператор свяжется с вами в ближайшее время для записи. 📞"
       : "Rahmat! Raqamingiz qabul qilindi — operatorimiz tez orada qabulga yozish uchun siz bilan bog'lanadi. 📞";
   }
-  let best: KbItem | null = null;
-  let bestScore = 0;
-  for (const item of KB) {
+  const scored = KB.map((item) => {
     let s = 0;
     for (const k of item.keys) if (q.includes(k)) s += k.length > 4 ? 2 : 1;
-    if (s > bestScore) {
-      bestScore = s;
-      best = item;
-    }
-  }
-  return best ? best[l] : FALLBACK[l];
+    // Aniq niyat so'zlari umumiy mavzudan ustun turadi
+    if (item.id === "prep_blood" && s > 0) s += 3;
+    if (item.id === "price" && s > 0) s += 1;
+    return { item, s };
+  })
+    .filter((x) => x.s > 0)
+    .sort((a, b) => b.s - a.s);
+  if (!scored.length) return FALLBACK[l];
+  const picks = [scored[0].item];
+  const second = scored.find((x) => x.item.id !== scored[0].item.id && x.s >= 2 && !["greet", "thanks"].includes(x.item.id));
+  if (second && !(scored[0].item.id === "prep_blood" && second.item.id === "lab")) picks.push(second.item);
+  return picks.map((p) => p[l]).join("\n\n");
 }
 
 export function kbAsText(): string {
