@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-display: 'Unbounded', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+body { margin: 0; font-family: var(--font-body); }
+
+@layer components {
+  .btn-red {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-[#E30613] to-[#A3000B] font-semibold text-white shadow-[0_14px_30px_-10px_rgba(227,6,19,0.65)] transition hover:-translate-y-0.5 hover:shadow-[0_18px_36px_-10px_rgba(227,6,19,0.75)] active:translate-y-0;
+  }
+  .btn-dark {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl bg-[#111] font-semibold text-white transition hover:bg-[#E30613];
+  }
+  .text-gradient-red {
+    background: linear-gradient(100deg, #FF1A27 0%, #E30613 40%, #7A0008 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+}
+
+@keyframes reveal { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+.reveal { animation: reveal .8s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.float-card { animation: floaty 6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .reveal, .float-card { animation: none; } }
